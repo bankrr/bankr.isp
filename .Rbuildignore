@@ -1,0 +1,7 @@
+^\.Rproj\.user$
+^[.]?air[.]toml$
+^\.vscode$
+^CLAUDE\.md$
+\.Rproj$
+^README\.Rmd$
+^LICENSE\.md$
