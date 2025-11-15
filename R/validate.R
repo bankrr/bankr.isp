@@ -10,20 +10,18 @@ validate <- function(dat) {
     Importo = "character"
   )
 
-  # Use bankr.utils validation functions
   validate_is_dataframe(dat)
   validate_has_rows(dat)
   validate_required_columns(dat, expected_cols)
   validate_no_extra_columns(dat, expected_cols)
   validate_column_types(dat, expected_cols)
 
-  # Validate date format for DATA and VALUTA columns
-  date_pattern <- "\\d{5}\\.0"
   if ("Data" %in% colnames(dat)) {
-    invalid_data <- !grepl(date_pattern, dat[["Data"]], perl = TRUE)
+    invalid_data <- !validate_date_format_excel(dat[["Data"]])
     if (any(invalid_data)) {
       stop(
-        "Column 'Data' contains invalid date formats. Expected numeric."
+        "Column 'Data' contains invalid date formats. Expected numeric Excel format.",
+        call. = FALSE
       )
     }
   }
