@@ -2,3 +2,4 @@
 
 export(read)
 export(tidy)
+import(bankr.utils)

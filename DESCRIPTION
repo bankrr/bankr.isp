@@ -6,8 +6,11 @@ Authors@R:
 Description: Reads and Tidies Bank Statements from Intesa San Paolo.
 License: MIT + file LICENSE
 Imports:
+    bankr.utils,
     readxl,
     utils
+Remotes:
+    bankrr/bankr.utils
 Suggests: 
     testthat (>= 3.0.0)
 Config/testthat/edition: 3
