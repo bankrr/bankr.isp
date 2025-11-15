@@ -1,49 +1,21 @@
 validate <- function(dat) {
   expected_cols <- list(
-    Data = "double",
+    Data = "character",
     Operazione = "character",
     Dettagli = "character",
     `Conto o carta` = "character",
     Contabilizzazione = "character",
     Categoria = "character",
     Valuta = "character",
-    Importo = "double"
+    Importo = "character"
   )
 
-  if (!is.data.frame(dat)) {
-    stop("Input must be a data.frame")
-  }
-
-  if (!nrow(dat) > 0) {
-    stop("Input have at least one row")
-  }
-
-  if (!all(names(expected_cols) %in% colnames(dat))) {
-    missing_cols <- setdiff(names(expected_cols), colnames(dat))
-    stop("Missing required columns: ", paste(missing_cols, collapse = ", "))
-  }
-
-  if (!all(colnames(dat) %in% names(expected_cols))) {
-    extra_cols <- setdiff(colnames(dat), expected_cols)
-    warning("Unexpected columns found: ", paste(extra_cols, collapse = ", "))
-  }
-
-  for (col in expected_cols) {
-    if (col %in% colnames(dat)) {
-      col_class <- class(dat[[col]])
-      expected_class <- expected_cols[[col]]
-      if (!any(col_class %in% expected_class)) {
-        stop(
-          "Column '",
-          col,
-          "' has incorrect type. Expected: ",
-          paste(expected_class, collapse = " or "),
-          ", Got: ",
-          paste(col_class, collapse = ", ")
-        )
-      }
-    }
-  }
+  # Use bankr.utils validation functions
+  validate_is_dataframe(dat)
+  validate_has_rows(dat)
+  validate_required_columns(dat, expected_cols)
+  validate_no_extra_columns(dat, expected_cols)
+  validate_column_types(dat, expected_cols)
 
   # Validate date format for DATA and VALUTA columns
   date_pattern <- "\\d{5}\\.0"
@@ -77,13 +49,7 @@ validate <- function(dat) {
 
   # Check that required columns don't contain NA values
   required_no_na_cols <- c("Data", "Importo", "Categoria", "Operazione")
-  for (col in required_no_na_cols) {
-    if (col %in% colnames(dat)) {
-      if (anyNA(dat[[col]])) {
-        stop("Column '", col, "' contains NA values.")
-      }
-    }
-  }
+  validate_no_na_columns(dat, required_no_na_cols)
 
   invisible(dat)
 }
